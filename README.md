@@ -24,3 +24,8 @@ Instructions
 Demo
 ====
 YouTube: https://youtu.be/z9q5JimoCec
+
+Notes and Limitations
+=====================
+- Event tint applied via Plugin Commands will persist after save/load, but will not persist if map changes.
+- Player and followers tint will always persist.
