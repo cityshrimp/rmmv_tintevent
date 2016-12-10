@@ -17,8 +17,8 @@
  * @default 60, 60, 60, 0
  *
  * @param Fade Speed
- * @desc Number of frames for tint to fade in and fade out again.  0 = Immediate
- * @default 0
+ * @desc Number of frames for tint to fade in and fade out again.  1 = Immediate
+ * @default 1
  *
  * @param Flicker
  * @desc Whether tint will constantly fade in and out for all events and characters.
@@ -163,6 +163,7 @@ if (Imported['MVCommons'] === undefined) {
         this._original_tone = [0, 0, 0, 0];
         this._fade_speed = $.fade_speed;
         this._flicker = $.flicker;
+        this._stop = false;
     };
     
     var old_Game_CharacterBase_update = Game_CharacterBase.prototype.update;
@@ -181,8 +182,13 @@ if (Imported['MVCommons'] === undefined) {
         this._target_tone = tone;
     }
     
+    Game_CharacterBase.prototype.removeTone = function() {
+        this._stop = true;
+        this.setTone([0,0,0,0]);
+    }
+    
     Game_CharacterBase.prototype.setFadeSpeed = function(fade_speed) {
-        this._fade_speed = fade_speed;
+        this._fade_speed = (fade_speed >= 1) ? fade_speed : 1;
     }
     
     Game_CharacterBase.prototype.setFlicker = function(flicker) {
@@ -202,18 +208,24 @@ if (Imported['MVCommons'] === undefined) {
             }
         }
         
-        if (this._fade_speed == 0
-           || (over == 4)) {
-            if (!this._flicker)
+        if (over == 4) {
+            if (!this._flicker) {
                 this._tone = this._target_tone.slice();
-            else {
+            } else {
                 // Flip the origin and target 
                 var temp = this._target_tone;
                 this._target_tone = this._original_tone;
                 this._original_tone = temp;
             }
+            
+            if (this._stop) {
+                this._tone = [0,0,0,0];
+                this._original_tone = [0,0,0,0];
+                this._target_tone = [0,0,0,0];
+                this._stop = false;
+            }
         } else {
-            var step = 1.0 / this._fade_speed;
+            var step = 1.0 / this._fade_speed;    
             for (var i = 0; i < 4; i++) {
                 var amount = (this._target_tone[i] - this._original_tone[i]) * step;
                 this._tone[i] += amount;
@@ -324,9 +336,6 @@ if (Imported['MVCommons'] === undefined) {
                 case 'apply_tint':
                     var tone = (option != undefined) ? $.parseTone(option) : $.default_tone;
                     tone = (tone) ? tone : $.default_tone;
-                case 'remove_tint':
-                    if (action == 'remove_tint')
-                        tone = [0,0,0,0];
                     switch (target) {
                         case 'all_events':
                             for (var event of $gameMap.events())
@@ -350,6 +359,32 @@ if (Imported['MVCommons'] === undefined) {
                                 event.setTone(tone);
                             else
                                 throw "Apply Tint: Specified event doesn't exist."
+                    }
+                    break;
+                case 'remove_tint':
+                    switch (target) {
+                        case 'all_events':
+                            for (var event of $gameMap.events())
+                                 event.removeTone();
+                            break;
+                        case 'player':
+                            $gamePlayer.removeTone();
+                            break;
+                        case 'party':
+                            $gamePlayer.removeTone();
+                            for (var f of $gamePlayer.followers()._data)
+                                f.removeTone();
+                            break;
+                        case 'follower':
+                            var f = $gamePlayer.followers().follower(index);
+                            if (f != undefined)
+                                f.removeTone();
+                        default:
+                            var event = $gameMap.event(index);
+                            if (event != undefined)
+                                event.removeTone();
+                            else
+                                throw "Remove Tint: Specified event doesn't exist."
                     }
                     break;
                 case 'fade_speed':
