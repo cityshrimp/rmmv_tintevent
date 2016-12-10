@@ -1,7 +1,7 @@
 /*=============================================================================
  * CityShrimp's Tint Event
  * CS_TintEvent.js
- * Version: 1.0.0
+ * Version: 1.0.0a
  * Free for commercial and non commercial use.
  *=============================================================================*/
 
@@ -85,7 +85,7 @@
 */
 
 var Imported = Imported || {};
-Imported['CS_TintEvent'] = "1.0.0";
+Imported['CS_TintEvent'] = "1.0.0a";
 
 var CS_TintEvent = CS_TintEvent || {};
 
@@ -98,7 +98,10 @@ if (Imported['MVCommons'] === undefined) {
         if (meta === undefined)
             return undefined;
         if (meta[propName] !== undefined)
-            return meta[propName].trim();
+            if (typeof meta[propName] === 'string')
+                return meta[propName].trim();
+            else
+                return meta[propName];
         for (var key in meta) {
             if (key.toLowerCase() == propName.toLowerCase()) {
                 return meta[key].trim();
@@ -198,6 +201,9 @@ if (Imported['MVCommons'] === undefined) {
     }
     
     Game_CharacterBase.prototype.updateTone = function() {
+        if (this._tone == undefined)
+            return;
+        
         var over = 0;
         for (var i = 0; i < 4; i++) {
             if ((this._target_tone[i] >= this._original_tone[i]
