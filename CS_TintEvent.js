@@ -1,7 +1,7 @@
 /*=============================================================================
  * CityShrimp's Tint Event
  * CS_TintEvent.js
- * Version: 1.0.0a
+ * Version: 1.0.0b
  * Free for commercial and non commercial use.
  *=============================================================================*/
 
@@ -85,7 +85,7 @@
 */
 
 var Imported = Imported || {};
-Imported['CS_TintEvent'] = "1.0.0a";
+Imported['CS_TintEvent'] = "1.0.0b";
 
 var CS_TintEvent = CS_TintEvent || {};
 
@@ -359,6 +359,7 @@ if (Imported['MVCommons'] === undefined) {
                             var f = $gamePlayer.followers().follower(index);
                             if (f != undefined)
                                 f.setTone(tone);
+                            break;
                         default:
                             var event = $gameMap.event(index);
                             if (event != undefined)
@@ -385,6 +386,7 @@ if (Imported['MVCommons'] === undefined) {
                             var f = $gamePlayer.followers().follower(index);
                             if (f != undefined)
                                 f.removeTone();
+                            break;
                         default:
                             var event = $gameMap.event(index);
                             if (event != undefined)
@@ -411,9 +413,10 @@ if (Imported['MVCommons'] === undefined) {
                                 f.setFadeSpeed(speed);
                             break;
                         case 'follower':
-                            var f = $gamePlayer.follower().follower(index);
+                            var f = $gamePlayer.followers().follower(index);
                             if (f != undefined)
                                 f.setFadeSpeed(speed);
+                            break;
                         default:
                             var event = $gameMap.event(index);
                             if (event != undefined)
@@ -441,9 +444,10 @@ if (Imported['MVCommons'] === undefined) {
                                 f.setFlicker(option);
                             break;
                         case 'follower':
-                            var f = $gamePlayer.follower().follower(index);
+                            var f = $gamePlayer.followers().follower(index);
                             if (f != undefined)
                                 f.setFlicker(option);
+                            break;
                         default:
                             var event = $gameMap.event(index);
                             if (event != undefined)
