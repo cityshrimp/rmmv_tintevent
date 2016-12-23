@@ -3,7 +3,7 @@ Tint Event Plugin for RPG Maker MV
 
 Author: CityShrimp
 
-Version: 1.0.0c
+Version: 1.0.1
 
 Features
 ========
