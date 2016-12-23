@@ -1,7 +1,7 @@
 /*=============================================================================
  * CityShrimp's Tint Event
  * CS_TintEvent.js
- * Version: 1.0.0c
+ * Version: 1.0.1
  * Free for commercial and non commercial use.
  *=============================================================================*/
 
@@ -85,7 +85,7 @@
 */
 
 var Imported = Imported || {};
-Imported['CS_TintEvent'] = "1.0.0c";
+Imported['CS_TintEvent'] = "1.0.1";
 
 var CS_TintEvent = CS_TintEvent || {};
 
@@ -266,7 +266,7 @@ if (Imported['MVCommons'] === undefined) {
     Game_Event.prototype.searchComment = function(term) {
         var comment = "";
         if(!this.page())
-            return value;
+            return false;
         var pagelist = this.page().list;
         for (var cmd of pagelist) {
             if(cmd.code == 108)   comment += cmd.parameters[0] + "\n";
@@ -397,7 +397,8 @@ if (Imported['MVCommons'] === undefined) {
                     }
                     break;
                 case 'fade_speed':
-                    if (! Number.isInteger(option))
+                    var speed = parseInt(option);
+                    if (! Number.isInteger(speed))
                         throw "Fade Speed needs to be an integer.";
                     var speed = parseInt(option);
                     switch (target) {
